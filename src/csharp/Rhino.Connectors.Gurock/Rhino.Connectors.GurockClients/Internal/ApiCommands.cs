@@ -75,7 +75,7 @@ namespace Rhino.Connectors.GurockClients.Internal
 
         // POST index.php?/api/v2/update_case/:case_id
         /// <summary>
-        /// Updates an existing test case (partial updates are supported, 
+        /// Updates an existing test case (partial updates are supported,
         /// i.e. you can submit and update specific fields only).
         /// </summary>
         public const string UPDATE_CASE = API + "/update_case/{0}";
@@ -196,14 +196,14 @@ namespace Rhino.Connectors.GurockClients.Internal
 
         // POST index.php?/api/v2/update_plan/:plan_id
         /// <summary>
-        /// Updates an existing test plan (partial updates are supported, i.e. 
+        /// Updates an existing test plan (partial updates are supported, i.e.
         /// you can submit and update specific fields only).
         /// </summary>
         public const string UPDATE_PLAN = API + "/update_plan/{0}";
 
         // POST index.php?/api/v2/update_plan_entry/:plan_id/:entry_id
         /// <summary>
-        /// Updates one or more existing test runs in a plan (partial updates are supported, i.e. 
+        /// Updates one or more existing test runs in a plan (partial updates are supported, i.e.
         /// you can submit and update specific fields only).
         /// </summary>
         public const string UPDATE_PLAN_ENTRY = API + "/update_plan_entry/{0}/{1}";
@@ -248,7 +248,7 @@ namespace Rhino.Connectors.GurockClients.Internal
 
         // POST index.php?/api/v2/update_project/:project_id
         /// <summary>
-        /// Updates an existing project (administrator status required; partial updates are supported, i.e. 
+        /// Updates an existing project (administrator status required; partial updates are supported, i.e.
         /// you can submit and update specific fields only).
         /// </summary>
         public const string UPDATE_PROJECT = API + "/update_project/{0}";
@@ -342,21 +342,21 @@ namespace Rhino.Connectors.GurockClients.Internal
 
         // GET index.php?/api/v2/get_runs/:project_id
         /// <summary>
-        /// returns a list of test runs for a project. only returns those test runs that are not part 
+        /// returns a list of test runs for a project. only returns those test runs that are not part
         /// of a test plan (please see get_plans/get_plan for this)
         /// </summary>
         public const string GET_RUNS = API + "/get_runs/{0}";
 
         // GET index.php?/api/v2/get_runs/:project_id&offset=:offset
         /// <summary>
-        /// returns a list of test runs for a project. only returns those test runs that are not part 
+        /// returns a list of test runs for a project. only returns those test runs that are not part
         /// of a test plan (please see get_plans/get_plan for this)
         /// </summary>
         public const string GET_RUNS_OFFSET = API + "/get_runs/{0}?offset={1}";
 
         // GET index.php?/api/v2/get_runs/:project_id&suite_id=:suite_id
         /// <summary>
-        /// returns a list of test runs for a project. only returns those test runs that are not part 
+        /// returns a list of test runs for a project. only returns those test runs that are not part
         /// of a test plan (please see get_plans/get_plan for this)
         /// </summary>
         public const string GET_RUNS_SUITE_ID = API + "/get_runs/{0}?suite_id={1}";
@@ -369,7 +369,7 @@ namespace Rhino.Connectors.GurockClients.Internal
 
         // POST index.php?/api/v2/update_run/:run_id
         /// <summary>
-        /// Updates an existing test run (partial updates are supported, i.e. 
+        /// Updates an existing test run (partial updates are supported, i.e.
         /// you can submit and update specific fields only).
         /// </summary>
         public const string UPDATE_RUN = API + "/update_run/{0}";
@@ -408,7 +408,7 @@ namespace Rhino.Connectors.GurockClients.Internal
 
         // POST index.php?/api/v2/update_suite/:suite_id
         /// <summary>
-        /// Updates an existing test suite (partial updates are supported, i.e. 
+        /// Updates an existing test suite (partial updates are supported, i.e.
         /// you can submit and update specific fields only).
         /// </summary>
         public const string UPDATE_SUITE = API + "/update_suite/{0}";

@@ -38,12 +38,11 @@ namespace Rhino.Connectors.Gurock
 
         // state: global parameters
         private readonly ILogger logger;
-        private readonly IDictionary<string, object> capabilities;
-        private readonly ClientFactory clientFactory;
         private readonly JiraClient jiraClient;
         private readonly JiraBugsManager bugsManager;
 
         // members: test rail clients
+        private readonly ClientFactory clientFactory;
         private readonly TestRailSuitesClient suitesClient;
         private readonly TestRailCasesClient casesClient;
         private readonly TestRailConfiguraionsClient configuraionsClient;
@@ -88,19 +87,9 @@ namespace Rhino.Connectors.Gurock
 
             // capabilities
             BucketSize = configuration.GetBucketSize();
-            configuration.PutDefaultCapabilities();
-            capabilities = configuration.Capabilities.ContainsKey($"{Connector.TestRail}:options")
-                ? configuration.Capabilities[$"{Connector.TestRail}:options"] as IDictionary<string, object>
-                : new Dictionary<string, object>();
 
             // setup
-            var jiraAuth = new JiraAuthentication
-            {
-                Collection = capabilities["jiraCollection"].ToString(),
-                Password = capabilities["jiraPassword"].ToString(),
-                Project = capabilities["jiraProject"].ToString(),
-                UserName = capabilities["jiraUser"].ToString()
-            };
+            var jiraAuth = GetJiraAuthentication(configuration.Capabilities);
             jiraClient = new JiraClient(jiraAuth);
 
             // integration
@@ -123,6 +112,16 @@ namespace Rhino.Connectors.Gurock
             project = suitesClient.Projects.FirstOrDefault(i => i.Name.Equals(configuration.ConnectorConfiguration.Project, Compare));
             user = usersClient.GetUserByEmail(configuration.ConnectorConfiguration.UserName);
         }
+
+        private JiraAuthentication GetJiraAuthentication(IDictionary<string, object> capabilities) => new JiraAuthentication
+        {
+            AsOsUser = capabilities.GetCapability(Connector.TestRail, "jiraAsOsUser", false),
+            Capabilities = capabilities.GetCapability(Connector.TestRail, "jiraCapabilities", new Dictionary<string, object>()),
+            Collection = capabilities.GetCapability(Connector.TestRail, "jiraCollection", string.Empty),
+            Password = capabilities.GetCapability(Connector.TestRail, "jiraPassword", string.Empty),
+            Project = capabilities.GetCapability(Connector.TestRail, "jiraProject", string.Empty),
+            UserName = capabilities.GetCapability(Connector.TestRail, "jiraUserName", string.Empty)
+        };
         #endregion
 
         #region *** Get: Test Cases   ***
@@ -138,25 +137,35 @@ namespace Rhino.Connectors.Gurock
             const string M2 = "total of [{0}] distinct items found (test or test-suite)";
 
             // parse as int
-            var idList = new List<int>();
-            foreach (var testRepository in Configuration.TestsRepository)
+            var idList = new List<(string schema, int id)>();
+            foreach (var id in Configuration.TestsRepository)
             {
-                int.TryParse(testRepository, out int repositoryOut);
-                idList.Add(repositoryOut);
+                idList.Add(GetSchema(id));
             }
             logger?.Debug(M1);
 
             // normalize
-            idList = idList.Where(i => i != 0).Distinct().ToList();
+            var cases = idList.Where(i => i.schema.Equals("C", Compare)).Select(i => i.id).Distinct();
+            var suits = idList.Where(i => !i.schema.Equals("C", Compare)).Select(i => i.id).Distinct();
             logger?.DebugFormat(M2, idList.Count);
 
-            // get all suites
-            var suites = suitesClient.GetSuites(project.Id).Where(i => idList.Contains(i.Id));
-
             // get all test-cases
-            var bySuites = suites.SelectMany(i => casesClient.GetCases(project.Id, i.Id)).Where(i => i != null) ?? new TestRailCase[0];
-            var byCases = idList.Select(i => casesClient.GetCase(i)).Where(i => i != null) ?? new TestRailCase[0];
+            var bySuites = suits.SelectMany(i => casesClient.GetCases(project.Id, i)).Where(i => i != null) ?? new TestRailCase[0];
+            var byCases = cases.Select(i => casesClient.GetCase(i)).Where(i => i != null) ?? new TestRailCase[0];
             return bySuites.Concat(byCases).DistinctBy(i => i.Id).Select(ToConnectorTestCase);
+        }
+
+        private (string Schema, int Id) GetSchema(string id)
+        {
+            // setup
+            var isCase = Regex.IsMatch(id.Trim(), @"(?i)C\d+");
+
+            // build
+            var schema = isCase ? "C" : "S";
+            int.TryParse(Regex.Match(id.Trim(), @"\d+").Value, out int idOut);
+
+            // get
+            return (schema, idOut);
         }
 
         private RhinoTestCase ToConnectorTestCase(TestRailCase testRailCase)
@@ -169,9 +178,7 @@ namespace Rhino.Connectors.Gurock
             // set
             var testCase = testRailCase.ToConnectorTestCase();
             testCase.Priority = $"{priority.Priority} - {priority.Name}";
-            testCase.Context["projectKey"] = capabilities.ContainsKey("jiraProject")
-                ? capabilities["jiraProject"]
-                : string.Empty;
+            testCase.Context["projectKey"] = jiraClient.Authentication.Project;
 
             // get
             return testCase;
@@ -185,6 +192,12 @@ namespace Rhino.Connectors.Gurock
         /// <remarks>Use this method for <see cref="SetConfiguration"/> customization.</remarks>
         public override void OnSetConfiguration()
         {
+            // exit conditions
+            if (Configuration.IsDryRun())
+            {
+                return;
+            }
+
             // constants: logging
             const string M0 = "searching for [{0}] configuration-group under [{1}] project";
             const string M1 = "configuration-group [{0}] was not found under [{1}]";
@@ -228,6 +241,13 @@ namespace Rhino.Connectors.Gurock
         /// <returns>Rhino.Api.Contracts.AutomationProvider.RhinoTestRun based on provided test cases.</returns>
         public override RhinoTestRun OnCreateTestRun(RhinoTestRun testRun)
         {
+            // exit conditions
+            if (Configuration.IsDryRun())
+            {
+                testRun.Context["runtimeid"] = "-1";
+                return testRun;
+            }
+
             // constants: logging
             const string M1 = "test-run [{0}] create under [{1}] project";
 
@@ -235,7 +255,7 @@ namespace Rhino.Connectors.Gurock
             const string C1 = "Automatically generated by Rhino engine";
 
             // shortcuts
-            var M = capabilities["milestone"].ToString();
+            var M = Configuration.Capabilities.GetCapability(Connector.TestRail, "milestone", string.Empty);
 
             // collect all suites used in this run
             var suites = GetSuites(testRun.TestCases).Distinct();
@@ -352,6 +372,33 @@ namespace Rhino.Connectors.Gurock
                 planEntries.Add(planEntry);
             }
             return planEntries;
+        }
+
+        /// <summary>
+        /// Completes automation provider test run results, if any were missed or bypassed.
+        /// </summary>
+        /// <param name="testRun">Rhino.Api.Contracts.AutomationProvider.RhinoTestRun results object to complete by.</param>
+        public override void CompleteTestRun(RhinoTestRun testRun)
+        {
+            // exit conditions
+            if (Configuration.IsDryRun())
+            {
+                return;
+            }
+
+            // get test plan
+            var isPlan = testRun.Context.ContainsKey(nameof(TestRailPlan));
+            var isPlanNull = isPlan && testRun.Context[nameof(TestRailPlan)] == default;
+
+            if (isPlanNull)
+            {
+                return;
+            }
+
+            var plan = testRun.Context[nameof(TestRailPlan)] as TestRailPlan;
+
+            // close test plan
+            plansClient.ClosePlan(plan.Id);
         }
         #endregion
 

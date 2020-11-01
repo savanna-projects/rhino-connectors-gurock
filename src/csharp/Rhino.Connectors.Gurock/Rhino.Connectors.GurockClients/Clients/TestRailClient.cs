@@ -263,9 +263,12 @@ namespace Rhino.Connectors.GurockClients.Clients
             }
 
             // set request-body
-            var jsonBody = JsonConvert.SerializeObject(command.Data, Formatting.None, JsonSettings);
-            var requestBody = Encoding.UTF8.GetBytes(jsonBody);
-            webRequest.GetRequestStream().Write(requestBody, 0, requestBody.Length);
+            if(command.Data != default)
+            {
+                var jsonBody = JsonConvert.SerializeObject(command.Data, Formatting.None, JsonSettings);
+                var requestBody = Encoding.UTF8.GetBytes(jsonBody);
+                webRequest.GetRequestStream().Write(requestBody, 0, requestBody.Length);
+            }
 
             // return ready to send request
             return webRequest;

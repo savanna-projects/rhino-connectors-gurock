@@ -13,6 +13,7 @@ using Rhino.Api.Contracts.Attributes;
 using Rhino.Api.Contracts.AutomationProvider;
 using Rhino.Api.Contracts.Configuration;
 using Rhino.Api.Extensions;
+using Rhino.Connectors.AtlassianClients.Extensions;
 using Rhino.Connectors.GurockClients;
 using Rhino.Connectors.GurockClients.Clients;
 using Rhino.Connectors.GurockClients.Contracts;
@@ -115,34 +116,18 @@ namespace Rhino.Connectors.Gurock
         /// <remarks>Use this method for PostTestExecute customization.</remarks>
         public override RhinoTestCase OnPostTestExecute(RhinoTestCase testCase)
         {
+            // exit conditions
+            if (Configuration.IsDryRun())
+            {
+                return testCase;
+            }
+
             // build steps
             var customSteps = GetCustomSteps(testCase);
 
-            // build test-case outcome
-            var elapsed = testCase.End - testCase.Start;
-            var test = testsClient.GetTests(int.Parse(testCase.TestRunKey)).FirstOrDefault(i => i.CaseId == int.Parse(testCase.Key));
-            var isFaild = testCase.Steps.Any(i => !i.Actual);
-            var status = isFaild ? 5 : 1;
-            if (testCase.Inconclusive)
-            {
-                status = 4;
-            }
-
             // save results
             var defect = GetDefect(testCase);
-            var result = new TestRailResult
-            {
-                AssignedTo = test.AssignedTo,
-                Version = $"{DateTime.Now:yyyyMMdd.fff}",
-                Elapsed = $"{elapsed.Hours}h {elapsed.Minutes}m {elapsed.Seconds}s",
-                StatusId = status,
-                CustomStepResults = customSteps.ToArray(),
-                Comment = $"iteration {testCase.Iteration}"
-            };
-            if (!string.IsNullOrEmpty(defect))
-            {
-                result.Defects = defect;
-            }
+            var result = GetResult(testCase, customSteps);
 
             // add results
             var results = resultsClient.AddResultForCase(int.Parse(testCase.TestRunKey), int.Parse(testCase.Key), result);
@@ -178,6 +163,37 @@ namespace Rhino.Connectors.Gurock
             return customSteps;
         }
 
+        private TestRailResult GetResult(RhinoTestCase testCase, IEnumerable<CustomStep> customSteps)
+        {
+            var elapsed = testCase.End - testCase.Start;
+            var test = testsClient.GetTests(int.Parse(testCase.TestRunKey)).FirstOrDefault(i => i.CaseId == int.Parse(testCase.Key));
+            var isFaild = testCase.Steps.Any(i => !i.Actual);
+            var status = isFaild ? 5 : 1;
+            if (testCase.Inconclusive)
+            {
+                status = 4;
+            }
+
+            // save results
+            var defect = GetDefect(testCase);
+            var result = new TestRailResult
+            {
+                AssignedTo = test.AssignedTo,
+                Version = $"{DateTime.Now:yyyyMMdd.fff}",
+                Elapsed = $"{elapsed.Hours}h {elapsed.Minutes}m {elapsed.Seconds}s",
+                StatusId = status,
+                CustomStepResults = customSteps.ToArray(),
+                Comment = $"iteration {testCase.Iteration}"
+            };
+            if (!string.IsNullOrEmpty(defect))
+            {
+                result.Defects = defect;
+            }
+
+            // get
+            return result;
+        }
+
         private string GetDefect(RhinoTestCase testCase) => !testCase.Context.ContainsKey("lastBugKey")
             ? string.Empty
             : $"{testCase.Context["lastBugKey"]}";
@@ -204,12 +220,12 @@ namespace Rhino.Connectors.Gurock
             casesClient.UpdateCase(caseId, onTestCase);
         }
 
-        // TODO: add parallel options
         private void AddAttachments(int resultId, RhinoTestCase testCase)
         {
-            // setup            
+            // setup
             var files = testCase.GetScreenshots();
-            var options = new ParallelOptions { MaxDegreeOfParallelism = 4 };
+            var bucketSize = Configuration.Capabilities.GetCapability(ProviderCapability.BucketSize, 4);
+            var options = new ParallelOptions { MaxDegreeOfParallelism = bucketSize };
 
             // add attachments
             Parallel.ForEach(files, options, file

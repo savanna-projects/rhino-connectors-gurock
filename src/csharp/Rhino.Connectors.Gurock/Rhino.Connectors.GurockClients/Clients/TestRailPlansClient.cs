@@ -58,7 +58,7 @@ namespace Rhino.Connectors.GurockClients.Clients
         /// </summary>
         /// <param name="projectId">The ID of the project</param>
         /// <returns>Success, the test plans are returned as part of the response</returns>
-        /// <remarks>This method will return up to 250 entries in the response array. To retrieve additional 
+        /// <remarks>This method will return up to 250 entries in the response array. To retrieve additional
         /// entries, you can make additional requests using the offset filter.</remarks>
         public IEnumerable<TestRailPlan> GetPlans(int projectId) => Get(projectId);
 
@@ -67,7 +67,7 @@ namespace Rhino.Connectors.GurockClients.Clients
         /// </summary>
         /// <param name="project">The name of the project</param>
         /// <returns>Success, the test plans are returned as part of the response</returns>
-        /// <remarks>This method will return up to 250 entries in the response array. To retrieve additional 
+        /// <remarks>This method will return up to 250 entries in the response array. To retrieve additional
         /// entries, you can make additional requests using the offset filter.</remarks>
         public IEnumerable<TestRailPlan> GetPlans(string project)
         {
@@ -162,7 +162,7 @@ namespace Rhino.Connectors.GurockClients.Clients
         /// <param name="planId">The ID of the plan the test runs should be added to</param>
         /// <param name="data">Request DTO</param>
         /// <returns>Success, the test run(s) were created and are returned as part of the response.</returns>
-        /// <remarks>Please note that test runs in a plan are organized into 'entries' and these 
+        /// <remarks>Please note that test runs in a plan are organized into 'entries' and these
         /// have their own IDs (to be used with update_plan_entry and delete_plan_entry, respectively).</remarks>
         public TestRailPlanEntry AddPlanEntry(int planId, TestRailPlanEntry data)
         {
@@ -185,7 +185,7 @@ namespace Rhino.Connectors.GurockClients.Clients
 
         #region *** pipeline: update ***
         /// <summary>
-        /// Updates an existing test plan (partial updates are supported, i.e. 
+        /// Updates an existing test plan (partial updates are supported, i.e.
         /// you can submit and update specific fields only).
         /// </summary>
         /// <param name="planId">The ID of the test plan</param>
@@ -201,7 +201,7 @@ namespace Rhino.Connectors.GurockClients.Clients
         }
 
         /// <summary>
-        /// Updates one or more existing test runs in a plan (partial updates are supported, i.e. 
+        /// Updates one or more existing test runs in a plan (partial updates are supported, i.e.
         /// you can submit and update specific fields only).
         /// </summary>
         /// <param name="planId">The ID of the test plan</param>
@@ -223,7 +223,7 @@ namespace Rhino.Connectors.GurockClients.Clients
         /// Closes an existing test plan and archives its test runs & results.
         /// </summary>
         /// <param name="planId">The ID of the test plan</param>
-        /// <returns>Success, the test plan and all its test runs were closed (archived). 
+        /// <returns>Success, the test plan and all its test runs were closed (archived).
         /// The test plan and its test runs are returned as part of the response.</returns>
         public TestRailPlan ClosePlan(int planId)
         {
