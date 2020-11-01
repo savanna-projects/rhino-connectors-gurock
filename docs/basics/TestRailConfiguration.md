@@ -1,4 +1,4 @@
-[Home](../README.md 'README') 
+[Home](../../README.md 'README') 
 
 # TestRail Configuration
 11/01/2020 - 25 minutes to read

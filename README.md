@@ -1,5 +1,3 @@
-[Home](../Home.md 'Home') 
-
 # Gurock Connector - Overview
 11/01/2020 - 1 minutes to read
 
