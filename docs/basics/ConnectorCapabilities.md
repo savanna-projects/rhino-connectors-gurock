@@ -1,4 +1,4 @@
-[Home](../README.md 'README') 
+[Home](../../README.md 'README') 
 
 # Connector Capabilities
 11/01/2020 - 10 minutes to read
