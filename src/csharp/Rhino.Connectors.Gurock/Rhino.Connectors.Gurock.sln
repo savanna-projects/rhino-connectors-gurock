@@ -11,7 +11,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{994030E3
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{A9C532ED-8590-47F2-8F74-29CA541F5BBA}"
 	ProjectSection(SolutionItems) = preProject
+		..\..\..\docs\basics\ConnectorCapabilities.md = ..\..\..\docs\basics\ConnectorCapabilities.md
 		..\..\..\README.md = ..\..\..\README.md
+		..\..\..\docs\basics\TestRailConfiguration.md = ..\..\..\docs\basics\TestRailConfiguration.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{34C08C29-83DD-4544-8EDD-7E4F7091AA62}"
