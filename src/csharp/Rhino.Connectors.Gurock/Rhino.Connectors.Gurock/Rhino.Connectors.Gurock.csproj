@@ -15,7 +15,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\rhino-connectors-atlassian\src\Rhino.Connectors.Atlassian\Rhino.Connectors.AtlassianClients\Rhino.Connectors.AtlassianClients.csproj" />
+    <PackageReference Include="Rhino.Connectors.AtlassianClients" Version="2020.11.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Rhino.Connectors.GurockClients\Rhino.Connectors.GurockClients.csproj" />
   </ItemGroup>
 
