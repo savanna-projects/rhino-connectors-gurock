@@ -81,7 +81,7 @@ steps:
     testRunTitle: 'Integration Testing --- $(Build.BuildNumber)'
 
 - task: PowerShell@2
-  displayName: 'cleanup'
+  displayName: 'Cleanup'
   inputs:
     targetType: 'inline'
     script: |
