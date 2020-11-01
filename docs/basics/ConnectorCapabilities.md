@@ -25,10 +25,11 @@ The options must be passed under `<connector_name>:options` key, as follow:
 ...
 ```  
 
-|Name          |Type   |Description                                                                                            |
-|--------------|-------|-------------------------------------------------------------------------------------------------------|
-|jiraCollection|string |The server base address under which the application is hosted (i.e. https://myjira.atlassian.net).     |
-|jiraPassword  |string |A valid password for your application.                                                                 |
-|jiraUserName  |string |A valid user for your application. The user must have create permissions for **Bugs**.                 |
-|jiraProject   |string |The project name or ID (depends on the connector implementation) under which to find and execute tests.|
-|bugType       |string |Bug issue type capability, if not set "Bug" is the default.                                            |
+|Name          |Type   |Description                                                                                                                                                            |
+|--------------|-------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|jiraCollection|string |The server base address under which the application is hosted (i.e. https://myjira.atlassian.net).                                                                     |
+|jiraPassword  |string |A valid password for your application.                                                                                                                                 |
+|jiraUserName  |string |A valid user for your application. The user must have create permissions for **Bugs**.                                                                                 |
+|jiraProject   |string |The project name or ID (depends on the connector implementation) under which to find and execute tests.                                                                |
+|bugType       |string |Bug issue type capability, if not set "Bug" is the default.                                                                                                            |
+|template      |string |The cases template name to use when creating cases. _**Template must have steps**_ - i.e. **Test Case (Steps)**. If not provided, **Test Case (Steps)** is the default.|

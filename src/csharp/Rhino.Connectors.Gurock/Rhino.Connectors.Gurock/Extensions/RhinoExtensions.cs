@@ -23,7 +23,7 @@ namespace Rhino.Connectors.Gurock.Extensions
                 Context = testCase.Context,
                 Inconclusive = false,
                 Key = $"{testCase.Id}",
-                DataSource = GetLocalDataSource(testCase).ToDictionary(),
+                DataSource = DoGetLocalDataSource(testCase).ToDictionary(),
                 Severity = $"{testCase.CustomSeverity}",
                 Tolerance = testCase.CustomTolerance,
                 Scenario = testCase.Title,
@@ -42,12 +42,7 @@ namespace Rhino.Connectors.Gurock.Extensions
         /// <returns>local data-provider</returns>
         public static DataTable GetLocalDataSource(this TestRailCase testCase)
         {
-            // exit conditions
-            if (string.IsNullOrEmpty(testCase.CustomPreconds))
-            {
-                return new DataTable();
-            }
-            return new DataTable().FromMarkDown(testCase.CustomPreconds, default);
+            return DoGetLocalDataSource(testCase);
         }
 
         /// <summary>
@@ -62,6 +57,37 @@ namespace Rhino.Connectors.Gurock.Extensions
                 Action = i.Content,
                 Expected = i.Expected
             });
+        }
+
+        /// <summary>
+        /// converts test-management test-case interface into a connector test-case
+        /// ready for automation
+        /// </summary>
+        /// <param name="testCase">test-cases to convert</param>
+        /// <returns>connector test-case</returns>
+        public static TestRailCase ToTestRailCase(this RhinoTestCase testCase)
+        {
+            // setup
+            int.TryParse(testCase.TestSuites.FirstOrDefault(), out int sectionId);
+
+            // build
+            return new TestRailCase
+            {
+                SectionId = sectionId,
+                Title = testCase.Scenario,
+                CustomStepsSeparated = testCase.Steps.Select(i => new CustomStep { Content = i.Action, Expected = i.Expected }).ToArray()
+            };
+        }
+
+        // UTILITIES
+        private static DataTable DoGetLocalDataSource(this TestRailCase testCase)
+        {
+            // exit conditions
+            if (string.IsNullOrEmpty(testCase.CustomPreconds))
+            {
+                return new DataTable();
+            }
+            return new DataTable().FromMarkDown(testCase.CustomPreconds, default);
         }
     }
 }

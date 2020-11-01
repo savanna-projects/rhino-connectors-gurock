@@ -7,6 +7,8 @@
 using Gravity.Abstraction.Logging;
 using Gravity.Extensions;
 
+using Newtonsoft.Json;
+
 using Rhino.Api;
 using Rhino.Api.Contracts.AutomationProvider;
 using Rhino.Api.Contracts.Configuration;
@@ -50,6 +52,7 @@ namespace Rhino.Connectors.Gurock
         private readonly TestRailPlansClient plansClient;
         private readonly TestRailUsersClient usersClient;
         private readonly TestRailPrioritiesClient prioritiesClient;
+        private readonly TestRailTemplatesClient templatesClient;
 
         // members: state
         private readonly TestRailProject project;
@@ -107,6 +110,7 @@ namespace Rhino.Connectors.Gurock
             plansClient = clientFactory.Create<TestRailPlansClient>();
             usersClient = clientFactory.Create<TestRailUsersClient>();
             prioritiesClient = clientFactory.Create<TestRailPrioritiesClient>();
+            templatesClient = clientFactory.Create<TestRailTemplatesClient>();
 
             // meta data
             project = suitesClient.Projects.FirstOrDefault(i => i.Name.Equals(configuration.ConnectorConfiguration.Project, Compare));
@@ -182,6 +186,47 @@ namespace Rhino.Connectors.Gurock
 
             // get
             return testCase;
+        }
+        #endregion
+
+        #region *** Create: Test Case ***
+        /// <summary>
+        /// Creates a new test case under the specified automation provider.
+        /// </summary>
+        /// <param name="testCase">Rhino.Api.Contracts.AutomationProvider.RhinoTestCase by which to create automation provider test case.</param>
+        /// <returns>The ID of the newly created entity.</returns>
+        public override string CreateTestCase(RhinoTestCase testCase)
+        {
+            // shortcuts
+            var onProject = Configuration.ConnectorConfiguration.Project;
+            testCase.Context[ContextEntry.Configuration] = Configuration;
+
+            // get section id
+            var master = suitesClient.GetSuites(project.Id).FirstOrDefault(i => i?.IsMaster == true);
+            int.TryParse(testCase.TestSuites.FirstOrDefault(), out int suite);
+            var id = suite == 0 ? master.Id : suite;
+            testCase.TestSuites = new[] { $"{id}" };
+
+            // get template
+            var templateName = Configuration.Capabilities.GetCapability(Connector.TestRail, "template", "Test Case (Steps)");
+            var template = templatesClient.GetTemplates(project.Id).FirstOrDefault(i => i.Name.Equals(templateName, Compare));
+            if(template == default)
+            {
+                return string.Empty;
+            }
+
+            // setup request body
+            var testRailCase = testCase.ToTestRailCase();
+            testRailCase.TemplateId = template.Id;
+
+            // add test case
+            testRailCase = casesClient.AddCase(sectionId: id, data: testRailCase);
+
+            // success
+            Logger?.InfoFormat($"Create-Test -Project [{onProject}] -Set [{string.Join(",", testCase?.TestSuites)}] = true");
+
+            // results
+            return JsonConvert.SerializeObject(testRailCase);
         }
         #endregion
 
@@ -509,7 +554,19 @@ namespace Rhino.Connectors.Gurock
         /// <param name="testCase">Rhino.Api.Contracts.AutomationProvider.RhinoTestCase by which to close automation provider bugs.</param>
         public override IEnumerable<string> OnCloseBugs(RhinoTestCase testCase)
         {
-            return bugsManager.OnCloseBugs(testCase, "Done", string.Empty);
+            // setup
+            int.TryParse(testCase.Key, out int id);
+
+            // get bugs
+            var testRailCase = casesClient.GetCase(id);
+            if (string.IsNullOrEmpty(testRailCase.Refs))
+            {
+                return Array.Empty<string>();
+            }
+
+            // parse bugs
+            var bugs = testRailCase.Refs.Split(',').Select(i => i.Trim());
+            return bugsManager.OnCloseBugs(testCase, "Done", string.Empty, bugs);
         }
 
         /// <summary>
