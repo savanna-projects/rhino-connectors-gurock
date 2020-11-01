@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30611.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{994030E3-29A9-4AC6-B32F-AEAFD3245C9B}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\build\azure_rhino_api.yml = ..\..\..\build\azure_rhino_api.yml
+		..\..\..\build\azure_rhino_template.yml = ..\..\..\build\azure_rhino_template.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{A9C532ED-8590-47F2-8F74-29CA541F5BBA}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\docs\basics\ConnectorCapabilities.md = ..\..\..\docs\basics\ConnectorCapabilities.md
+		..\..\..\README.md = ..\..\..\README.md
+		..\..\..\docs\basics\TestRailConfiguration.md = ..\..\..\docs\basics\TestRailConfiguration.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{34C08C29-83DD-4544-8EDD-7E4F7091AA62}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\test\azure_settings_mstest.runsettings = ..\..\..\test\azure_settings_mstest.runsettings
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rhino.Connectors.AtlassianClients", "..\..\..\..\rhino-connectors-atlassian\src\Rhino.Connectors.Atlassian\Rhino.Connectors.AtlassianClients\Rhino.Connectors.AtlassianClients.csproj", "{BDF37EAC-3724-485E-8931-C49E03D12C43}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rhino.Connectors.Gurock", "Rhino.Connectors.Gurock\Rhino.Connectors.Gurock.csproj", "{209FD941-1636-462E-8313-9925A79065EE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rhino.Connectors.Gurock.UnitTests", "Rhino.Connectors.Gurock.UnitTests\Rhino.Connectors.Gurock.UnitTests.csproj", "{1AFD10D6-AAED-41AB-AE9C-C1E767A19E1D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rhino.Connectors.GurockClients", "Rhino.Connectors.GurockClients\Rhino.Connectors.GurockClients.csproj", "{632596CA-AE72-4EF7-9175-A64E30759921}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BDF37EAC-3724-485E-8931-C49E03D12C43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDF37EAC-3724-485E-8931-C49E03D12C43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDF37EAC-3724-485E-8931-C49E03D12C43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDF37EAC-3724-485E-8931-C49E03D12C43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{209FD941-1636-462E-8313-9925A79065EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{209FD941-1636-462E-8313-9925A79065EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{209FD941-1636-462E-8313-9925A79065EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{209FD941-1636-462E-8313-9925A79065EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AFD10D6-AAED-41AB-AE9C-C1E767A19E1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AFD10D6-AAED-41AB-AE9C-C1E767A19E1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AFD10D6-AAED-41AB-AE9C-C1E767A19E1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AFD10D6-AAED-41AB-AE9C-C1E767A19E1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{632596CA-AE72-4EF7-9175-A64E30759921}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{632596CA-AE72-4EF7-9175-A64E30759921}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{632596CA-AE72-4EF7-9175-A64E30759921}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{632596CA-AE72-4EF7-9175-A64E30759921}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1DEB57A4-2022-4372-B387-77F46880EAFD}
+	EndGlobalSection
+EndGlobal
