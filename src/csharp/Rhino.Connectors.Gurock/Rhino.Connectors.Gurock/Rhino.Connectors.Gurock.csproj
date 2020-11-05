@@ -1,21 +1,21 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <PackageId>Rhino.Connectors.Gurock</PackageId>
     <LangVersion>latest</LangVersion>
-    <Title>Rhino Test Rail Connector - Connector for Gurock Test Rail.</Title>
+    <Title>Rhino TestRail Connector - Connector for Gurock Test Rail.</Title>
     <Authors>Rhino-API Community</Authors>
-    <Description>Connector for Gurock Test Rail and Jira for bugs management.</Description>
+    <Description>Connector for Gurock TestRail and Jira for bugs management.</Description>
     <PackageTags>automation,crawling,crawl,selenium,appium,automation testing,automation test,qa,gravity,gravity api,scrapping,scrap</PackageTags>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/savanna-projects</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/savanna-projects/rhino-connectors-gurock</PackageProjectUrl>
     <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Rhino.Connectors.AtlassianClients" Version="2020.11.1.2" />
+    <PackageReference Include="Rhino.Connectors.AtlassianClients" Version="2020.11.3.2" />
   </ItemGroup>
 
   <ItemGroup>
