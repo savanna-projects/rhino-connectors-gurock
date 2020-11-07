@@ -12,8 +12,8 @@ using Rhino.Api;
 using Rhino.Api.Contracts.Attributes;
 using Rhino.Api.Contracts.AutomationProvider;
 using Rhino.Api.Contracts.Configuration;
+using Rhino.Api.Contracts.Extensions;
 using Rhino.Api.Extensions;
-using Rhino.Connectors.AtlassianClients.Extensions;
 using Rhino.Connectors.GurockClients;
 using Rhino.Connectors.GurockClients.Clients;
 using Rhino.Connectors.GurockClients.Contracts;
@@ -117,7 +117,7 @@ namespace Rhino.Connectors.Gurock
         public override RhinoTestCase OnPostTestExecute(RhinoTestCase testCase)
         {
             // exit conditions
-            if (Configuration.IsDryRun())
+            if (Configuration.ConnectorConfiguration.DryRun)
             {
                 return testCase;
             }
@@ -224,7 +224,7 @@ namespace Rhino.Connectors.Gurock
         {
             // setup
             var files = testCase.GetScreenshots();
-            var bucketSize = Configuration.Capabilities.GetCapability(ProviderCapability.BucketSize, 4);
+            var bucketSize = Configuration.GetCapability(ProviderCapability.BucketSize, 4);
             var options = new ParallelOptions { MaxDegreeOfParallelism = bucketSize };
 
             // add attachments
