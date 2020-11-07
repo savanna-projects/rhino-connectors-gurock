@@ -89,14 +89,17 @@ namespace Rhino.Connectors.Gurock
             this.logger = logger?.Setup(loggerName: nameof(GurockAutomationProvider));
 
             // capabilities
-            BucketSize = configuration.GetBucketSize();
+            BucketSize = configuration.GetCapability(ProviderCapability.BucketSize, 15);
 
-            // setup
+            // jira
             var jiraAuth = GetJiraAuthentication(configuration.Capabilities);
-            jiraClient = new JiraClient(jiraAuth);
+            if (!string.IsNullOrEmpty(jiraAuth.Collection))
+            {
+                jiraClient = new JiraClient(jiraAuth);
+                bugsManager = new JiraBugsManager(jiraClient);
+            }
 
             // integration
-            bugsManager = new JiraBugsManager(jiraClient);
             clientFactory = new ClientFactory(
                 configuration.ConnectorConfiguration.Collection,
                 configuration.ConnectorConfiguration.UserName,
@@ -182,7 +185,9 @@ namespace Rhino.Connectors.Gurock
             // set
             var testCase = testRailCase.ToConnectorTestCase();
             testCase.Priority = $"{priority.Priority} - {priority.Name}";
-            testCase.Context["projectKey"] = jiraClient.Authentication.Project;
+            testCase.Context["projectKey"] = string.IsNullOrEmpty($"{jiraClient?.Authentication?.Project}")
+                ? "-1"
+                : jiraClient.Authentication.Project;
 
             // get
             return testCase;
@@ -237,12 +242,6 @@ namespace Rhino.Connectors.Gurock
         /// <remarks>Use this method for <see cref="SetConfiguration"/> customization.</remarks>
         public override void OnSetConfiguration()
         {
-            // exit conditions
-            if (Configuration.IsDryRun())
-            {
-                return;
-            }
-
             // constants: logging
             const string M0 = "searching for [{0}] configuration-group under [{1}] project";
             const string M1 = "configuration-group [{0}] was not found under [{1}]";
@@ -286,13 +285,6 @@ namespace Rhino.Connectors.Gurock
         /// <returns>Rhino.Api.Contracts.AutomationProvider.RhinoTestRun based on provided test cases.</returns>
         public override RhinoTestRun OnCreateTestRun(RhinoTestRun testRun)
         {
-            // exit conditions
-            if (Configuration.IsDryRun())
-            {
-                testRun.Context["runtimeid"] = "-1";
-                return testRun;
-            }
-
             // constants: logging
             const string M1 = "test-run [{0}] create under [{1}] project";
 
@@ -423,14 +415,8 @@ namespace Rhino.Connectors.Gurock
         /// Completes automation provider test run results, if any were missed or bypassed.
         /// </summary>
         /// <param name="testRun">Rhino.Api.Contracts.AutomationProvider.RhinoTestRun results object to complete by.</param>
-        public override void CompleteTestRun(RhinoTestRun testRun)
+        public override void OnCompleteTestRun(RhinoTestRun testRun)
         {
-            // exit conditions
-            if (Configuration.IsDryRun())
-            {
-                return;
-            }
-
             // get test plan
             var isPlan = testRun.Context.ContainsKey(nameof(TestRailPlan));
             var isPlanNull = isPlan && testRun.Context[nameof(TestRailPlan)] == default;
@@ -453,7 +439,7 @@ namespace Rhino.Connectors.Gurock
         /// </summary>
         /// <param name="testCase">RhinoTestCase by which to find bugs.</param>
         /// <returns>A list of bugs (can be JSON or ID for instance).</returns>
-        public override IEnumerable<string> GetBugs(RhinoTestCase testCase)
+        public override IEnumerable<string> OnGetBugs(RhinoTestCase testCase)
         {
             return bugsManager.GetBugs(testCase);
         }
@@ -463,7 +449,7 @@ namespace Rhino.Connectors.Gurock
         /// </summary>
         /// <param name="testCase">RhinoTestCase by which to assert against match bugs.</param>
         /// <returns>An open bug.</returns>
-        public override string GetOpenBug(RhinoTestCase testCase)
+        public override string OnGetOpenBug(RhinoTestCase testCase)
         {
             // setup
             int.TryParse(testCase.Key, out int caseId);
@@ -501,7 +487,7 @@ namespace Rhino.Connectors.Gurock
         /// Executes a routie of post bug creation.
         /// </summary>
         /// <param name="testCase">RhinoTestCase to execute routine on.</param>
-        public override void PostCreateBug(RhinoTestCase testCase)
+        public override void OnPostCreateBug(RhinoTestCase testCase)
         {
             // exit conditions
             if (!testCase.Context.ContainsKey("lastBugKey"))

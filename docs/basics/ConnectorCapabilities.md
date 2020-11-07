@@ -33,3 +33,4 @@ The options must be passed under `<connector_name>:options` key, as follow:
 |jiraProject   |string |The project name or ID (depends on the connector implementation) under which to find and execute tests.                                                                |
 |bugType       |string |Bug issue type capability, if not set "Bug" is the default.                                                                                                            |
 |template      |string |The cases template name to use when creating cases. _**Template must have steps**_ - i.e. **Test Case (Steps)**. If not provided, **Test Case (Steps)** is the default.|
+|milestone     |string |Milestones are associated with project and one of the best ways to track the progress and timeline. It is similar to the small targets in a project.                   |
