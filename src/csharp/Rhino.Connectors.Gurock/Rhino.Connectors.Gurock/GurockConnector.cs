@@ -12,7 +12,6 @@ using Rhino.Api;
 using Rhino.Api.Contracts.Attributes;
 using Rhino.Api.Contracts.AutomationProvider;
 using Rhino.Api.Contracts.Configuration;
-using Rhino.Api.Contracts.Extensions;
 using Rhino.Api.Extensions;
 using Rhino.Connectors.GurockClients;
 using Rhino.Connectors.GurockClients.Clients;
@@ -141,7 +140,7 @@ namespace Rhino.Connectors.Gurock
             return testCase;
         }
 
-        private IEnumerable<CustomStep> GetCustomSteps(RhinoTestCase testCase)
+        private static IEnumerable<CustomStep> GetCustomSteps(RhinoTestCase testCase)
         {
             // setup
             var customSteps = new List<CustomStep>();
@@ -194,7 +193,7 @@ namespace Rhino.Connectors.Gurock
             return result;
         }
 
-        private string GetDefect(RhinoTestCase testCase) => !testCase.Context.ContainsKey("lastBugKey")
+        private static string GetDefect(RhinoTestCase testCase) => !testCase.Context.ContainsKey("lastBugKey")
             ? string.Empty
             : $"{testCase.Context["lastBugKey"]}";
 
@@ -207,7 +206,7 @@ namespace Rhino.Connectors.Gurock
             }
 
             // setup
-            int.TryParse(testCase.Key, out int caseId);
+            _ = int.TryParse(testCase.Key, out int caseId);
 
             // get
             var onTestCase = casesClient.GetCase(caseId);

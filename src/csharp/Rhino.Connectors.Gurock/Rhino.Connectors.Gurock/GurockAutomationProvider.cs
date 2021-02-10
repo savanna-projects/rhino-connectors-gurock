@@ -12,7 +12,6 @@ using Newtonsoft.Json;
 using Rhino.Api;
 using Rhino.Api.Contracts.AutomationProvider;
 using Rhino.Api.Contracts.Configuration;
-using Rhino.Api.Contracts.Extensions;
 using Rhino.Api.Extensions;
 
 using Rhino.Connectors.AtlassianClients;
@@ -120,7 +119,7 @@ namespace Rhino.Connectors.Gurock
             user = usersClient.GetUserByEmail(configuration.ConnectorConfiguration.UserName);
         }
 
-        private JiraAuthentication GetJiraAuthentication(IDictionary<string, object> capabilities) => new JiraAuthentication
+        private static JiraAuthentication GetJiraAuthentication(IDictionary<string, object> capabilities) => new JiraAuthentication
         {
             AsOsUser = capabilities.GetCapability(Connector.TestRail, "jiraAsOsUser", false),
             Capabilities = capabilities.GetCapability(Connector.TestRail, "jiraCapabilities", new Dictionary<string, object>()),
@@ -157,19 +156,19 @@ namespace Rhino.Connectors.Gurock
             logger?.DebugFormat(M2, idList.Count);
 
             // get all test-cases
-            var bySuites = suits.SelectMany(i => casesClient.GetCases(project.Id, i)).Where(i => i != null) ?? new TestRailCase[0];
-            var byCases = cases.Select(i => casesClient.GetCase(i)).Where(i => i != null) ?? new TestRailCase[0];
+            var bySuites = suits.SelectMany(i => casesClient.GetCases(project.Id, i)).Where(i => i != null) ?? Array.Empty<TestRailCase>();
+            var byCases = cases.Select(i => casesClient.GetCase(i)).Where(i => i != null) ?? Array.Empty<TestRailCase>();
             return bySuites.Concat(byCases).DistinctBy(i => i.Id).Select(ToConnectorTestCase);
         }
 
-        private (string Schema, int Id) GetSchema(string id)
+        private static (string Schema, int Id) GetSchema(string id)
         {
             // setup
             var isCase = Regex.IsMatch(id.Trim(), @"(?i)C\d+");
 
             // build
             var schema = isCase ? "C" : "S";
-            int.TryParse(Regex.Match(id.Trim(), @"\d+").Value, out int idOut);
+            _ = int.TryParse(Regex.Match(id.Trim(), @"\d+").Value, out int idOut);
 
             // get
             return (schema, idOut);
@@ -208,7 +207,7 @@ namespace Rhino.Connectors.Gurock
 
             // get section id
             var master = suitesClient.GetSuites(project.Id).FirstOrDefault(i => i?.IsMaster == true);
-            int.TryParse(testCase.TestSuites.FirstOrDefault(), out int suite);
+            _ = int.TryParse(testCase.TestSuites.FirstOrDefault(), out int suite);
             var id = suite == 0 ? master.Id : suite;
             testCase.TestSuites = new[] { $"{id}" };
 
@@ -302,7 +301,7 @@ namespace Rhino.Connectors.Gurock
             var planEntries = Get(entires);
 
             // get milestone
-            int.TryParse(M, out int msOut);
+            _ = int.TryParse(M, out int msOut);
             var milestone = milestoneClient
                 .GetMileStones(project.Id)
                 .FirstOrDefault(i => i.Id == msOut || i.Name.Equals(M, StringComparison.OrdinalIgnoreCase));
@@ -325,12 +324,12 @@ namespace Rhino.Connectors.Gurock
         }
 
         // parse & returns all valid suites
-        private IEnumerable<int> GetSuites(IEnumerable<RhinoTestCase> testCases)
+        private static IEnumerable<int> GetSuites(IEnumerable<RhinoTestCase> testCases)
         {
             var suites = new List<int>();
             foreach (var testCase in testCases)
             {
-                int.TryParse(testCase.TestSuites?.FirstOrDefault(), out int suiteOut);
+                _ = int.TryParse(testCase.TestSuites?.FirstOrDefault(), out int suiteOut);
                 if (suiteOut == default)
                 {
                     continue;
@@ -359,12 +358,12 @@ namespace Rhino.Connectors.Gurock
         }
 
         // parse & returns all valid cases
-        private IEnumerable<int> Get(IEnumerable<RhinoTestCase> testCases)
+        private static IEnumerable<int> Get(IEnumerable<RhinoTestCase> testCases)
         {
             var cases = new List<int>();
             foreach (var testCase in testCases)
             {
-                int.TryParse(testCase.Key, out int caseOut);
+                _ = int.TryParse(testCase.Key, out int caseOut);
                 if (caseOut == default)
                 {
                     continue;
@@ -452,7 +451,7 @@ namespace Rhino.Connectors.Gurock
         public override string OnGetOpenBug(RhinoTestCase testCase)
         {
             // setup
-            int.TryParse(testCase.Key, out int caseId);
+            _ = int.TryParse(testCase.Key, out int caseId);
 
             // get references
             var onTestCase = casesClient.GetCase(caseId);
@@ -541,7 +540,7 @@ namespace Rhino.Connectors.Gurock
         public override IEnumerable<string> OnCloseBugs(RhinoTestCase testCase)
         {
             // setup
-            int.TryParse(testCase.Key, out int id);
+            _ = int.TryParse(testCase.Key, out int id);
 
             // get bugs
             var testRailCase = casesClient.GetCase(id);
