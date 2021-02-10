@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net5</TargetFrameworks>
+    <TargetFrameworks>net5.0</TargetFrameworks>
     <PackageId>Rhino.Connectors.Gurock</PackageId>
     <LangVersion>latest</LangVersion>
     <Title>Rhino TestRail Connector - Connector for Gurock Test Rail.</Title>
@@ -15,8 +15,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Rhino.Api" Version="2020.12.27.1" />
-    <PackageReference Include="Rhino.Connectors.AtlassianClients" Version="2020.12.27.1" />
+    <PackageReference Include="Rhino.Api" Version="2021.2.9.1" />
+    <PackageReference Include="Rhino.Connectors.AtlassianClients" Version="2021.1.21.1" />
   </ItemGroup>
 
   <ItemGroup>
