@@ -12,10 +12,6 @@ namespace Rhino.Connectors.Gurock.UnitTests
     [TestClass]
     public class OnGoing
     {
-        [TestMethod]
-        public void Test()
-        {
 
-        }
     }
 }
