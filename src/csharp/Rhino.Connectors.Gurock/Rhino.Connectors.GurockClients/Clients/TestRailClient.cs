@@ -249,7 +249,6 @@ namespace Rhino.Connectors.GurockClients.Clients
             return default;
         }
 
-#pragma warning disable S1144, IDE0051, RCS1213
         // creates a POST web-request
         private WebRequest Post(TestRailHttpCommand command)
         {
@@ -275,11 +274,10 @@ namespace Rhino.Connectors.GurockClients.Clients
         }
 
         // creates a GET web-request
-        private WebRequest Get(TestRailHttpCommand command) => ByCommand(command);
-#pragma warning restore S1144, IDE0051, RCS1213
+        private static WebRequest Get(TestRailHttpCommand command) => ByCommand(command);
 
         // creates web-request by HTTP command
-        private WebRequest ByCommand(TestRailHttpCommand command)
+        private static WebRequest ByCommand(TestRailHttpCommand command)
         {
             var webRequest = WebRequest.Create(command.Endpoint);
             webRequest.Method = command.HttpMethod;
@@ -287,7 +285,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             return webRequest;
         }
 
-        private WebRequest GetAttachmentRequest(WebRequest request, TestRailHttpCommand command)
+        private static WebRequest GetAttachmentRequest(WebRequest request, TestRailHttpCommand command)
         {
             string boundary = String.Format("{0:N}", Guid.NewGuid());
             string filePath = (string)command.Data;
@@ -295,7 +293,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             request.ContentType = "multipart/form-data; boundary=" + boundary;
 
             var postDataStream = new MemoryStream();
-            using (StreamWriter postDataWriter = new StreamWriter(postDataStream))
+            using (StreamWriter postDataWriter = new(postDataStream))
             {
                 postDataWriter.Write("\r\n--" + boundary + "\r\n");
                 postDataWriter.Write("Content-Disposition: form-data; name=\"attachment\";"
@@ -305,7 +303,7 @@ namespace Rhino.Connectors.GurockClients.Clients
                                 Path.GetExtension(filePath));
                 postDataWriter.Flush();
 
-                using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                using (FileStream fileStream = new(filePath, FileMode.Open, FileAccess.Read))
                 {
                     byte[] buffer = new byte[1024];
                     int bytesRead;

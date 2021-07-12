@@ -15,7 +15,9 @@ namespace Rhino.Connectors.GurockClients.Contracts
         /// <summary>
         /// The ID of the assignee (user) of the test result
         /// </summary>
-        [DataMember, JsonProperty(PropertyName = "assignedto_id")]
+        [DataMember]
+        [JsonProperty(PropertyName = "assignedto_id")]
+        [System.Text.Json.Serialization.JsonPropertyName("assignedto_id")]
         public int? AssignedTo { get; set; }
 
         /// <summary>
