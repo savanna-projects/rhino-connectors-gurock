@@ -7,8 +7,6 @@
 using Gravity.Abstraction.Logging;
 using Gravity.Extensions;
 
-using Newtonsoft.Json;
-
 using Rhino.Api;
 using Rhino.Api.Contracts.AutomationProvider;
 using Rhino.Api.Contracts.Configuration;
@@ -26,6 +24,7 @@ using Rhino.Connectors.GurockClients.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 using Utilities = Rhino.Api.Extensions.Utilities;
@@ -119,7 +118,7 @@ namespace Rhino.Connectors.Gurock
             user = usersClient.GetUserByEmail(configuration.ConnectorConfiguration.UserName);
         }
 
-        private static JiraAuthentication GetJiraAuthentication(IDictionary<string, object> capabilities) => new JiraAuthentication
+        private static JiraAuthentication GetJiraAuthentication(IDictionary<string, object> capabilities) => new()
         {
             AsOsUser = capabilities.GetCapability(Connector.TestRail, "jiraAsOsUser", false),
             Capabilities = capabilities.GetCapability(Connector.TestRail, "jiraCapabilities", new Dictionary<string, object>()),
@@ -230,7 +229,10 @@ namespace Rhino.Connectors.Gurock
             Logger?.InfoFormat($"Create-Test -Project [{onProject}] -Set [{string.Join(",", testCase?.TestSuites)}] = true");
 
             // results
-            return JsonConvert.SerializeObject(testRailCase);
+            return JsonSerializer.Serialize(testRailCase, new()
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
         }
         #endregion
 

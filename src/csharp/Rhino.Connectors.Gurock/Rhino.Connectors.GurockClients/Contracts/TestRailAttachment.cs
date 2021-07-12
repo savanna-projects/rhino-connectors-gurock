@@ -27,7 +27,9 @@ namespace Rhino.Connectors.GurockClients.Contracts
         /// <summary>
         /// filename
         /// </summary>
-        [DataMember, JsonProperty(PropertyName = "filename")]
+        [DataMember]
+        [JsonProperty(PropertyName = "filename")]
+        [System.Text.Json.Serialization.JsonPropertyName("filename")]
         public string FileName { get; set; }
 
         /// <summary>

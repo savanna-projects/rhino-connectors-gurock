@@ -420,7 +420,6 @@ namespace Rhino.Connectors.GurockClients.Internal
         public const string DELETE_SUITE = API + "/delete_suite/{0}";
         #endregion
 
-
         #region *** controller: templates     ***
         // GET index.php?/api/v2/get_templates/:project_id
         /// <summary>
@@ -428,7 +427,6 @@ namespace Rhino.Connectors.GurockClients.Internal
         /// </summary>
         public const string GET_TEMPLATES = API + "/get_templates/{0}";
         #endregion
-
 
         #region *** controller: tests         ***
         // GET index.php?/api/v2/get_test/:test_id
