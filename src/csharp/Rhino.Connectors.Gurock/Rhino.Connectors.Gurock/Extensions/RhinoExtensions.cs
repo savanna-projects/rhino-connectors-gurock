@@ -68,7 +68,7 @@ namespace Rhino.Connectors.Gurock.Extensions
         public static TestRailCase ToTestRailCase(this RhinoTestCase testCase)
         {
             // setup
-            int.TryParse(testCase.TestSuites.FirstOrDefault(), out int sectionId);
+            _ = int.TryParse(testCase.TestSuites.FirstOrDefault(), out int sectionId);
 
             // build
             return new TestRailCase

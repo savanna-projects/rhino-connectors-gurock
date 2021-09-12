@@ -28,7 +28,7 @@ namespace Rhino.Connectors.Gurock
     /// XRay connector for running XRay tests as Rhino Automation Specs.
     /// </summary>
     [Connector(
-        value: Connector.TestRail,
+        value: RhinoConnectors.TestRail,
         Name = "Connector - Gurock Test Rail & Jira",
         Description =
         "Allows to execute Rhino Specs from Gurock Test Rail cases and report back as Test Execution. " +
@@ -82,7 +82,7 @@ namespace Rhino.Connectors.Gurock
         {
             // setup connector type (double check)
             configuration.ConnectorConfiguration ??= new RhinoConnectorConfiguration();
-            configuration.ConnectorConfiguration.Connector = Connector.TestRail;
+            configuration.ConnectorConfiguration.Connector = RhinoConnectors.TestRail;
 
             // setup provider manager
             ProviderManager = new GurockAutomationProvider(configuration, types, logger);
@@ -113,7 +113,7 @@ namespace Rhino.Connectors.Gurock
         /// </summary>
         /// <param name="testCase">The Rhino.Api.Contracts.AutomationProvider.RhinoTestCase which was executed.</param>
         /// <remarks>Use this method for PostTestExecute customization.</remarks>
-        public override RhinoTestCase OnPostTestExecute(RhinoTestCase testCase)
+        public override RhinoTestCase OnTestTeardown(RhinoTestCase testCase)
         {
             // exit conditions
             if (Configuration.ConnectorConfiguration.DryRun)
