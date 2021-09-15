@@ -15,8 +15,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Rhino.Api" Version="2021.9.13.1" />
-    <PackageReference Include="Rhino.Connectors.AtlassianClients" Version="2021.9.13.1" />
+    <PackageReference Include="Rhino.Api" Version="2021.9.15.3" />
+    <PackageReference Include="Rhino.Connectors.AtlassianClients" Version="2021.9.15.1" />
   </ItemGroup>
 
   <ItemGroup>
