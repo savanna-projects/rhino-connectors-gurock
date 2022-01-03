@@ -5,7 +5,6 @@
  * http://docs.gurock.com/testrail-api2/reference-attachments
  */
 using Gravity.Abstraction.Logging;
-using Gravity.Extensions;
 
 using Rhino.Api;
 using Rhino.Api.Contracts.AutomationProvider;
@@ -157,7 +156,11 @@ namespace Rhino.Connectors.Gurock
             // get all test-cases
             var bySuites = suits.SelectMany(i => casesClient.GetCases(project.Id, i)).Where(i => i != null) ?? Array.Empty<TestRailCase>();
             var byCases = cases.Select(i => casesClient.GetCase(i)).Where(i => i != null) ?? Array.Empty<TestRailCase>();
-            return bySuites.Concat(byCases).DistinctBy(i => i.Id).Select(ToConnectorTestCase);
+            return Gravity
+                .Extensions
+                .CollectionExtensions
+                .DistinctBy(bySuites.Concat(byCases), i => i.Id)
+                .Select(ToConnectorTestCase);
         }
 
         private static (string Schema, int Id) GetSchema(string id)
@@ -229,7 +232,7 @@ namespace Rhino.Connectors.Gurock
             Logger?.InfoFormat($"Create-Test -Project [{onProject}] -Set [{string.Join(",", testCase?.TestSuites)}] = true");
 
             // results
-            return JsonSerializer.Serialize(testRailCase, new()
+            return JsonSerializer.Serialize(testRailCase, new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             });

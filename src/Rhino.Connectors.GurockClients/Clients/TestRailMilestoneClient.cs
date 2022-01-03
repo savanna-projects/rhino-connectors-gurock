@@ -101,7 +101,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.ADD_MILESTONE, projectId);
 
             // execute command
-            return ExecutePost<TestRailMileStone>(command, data);
+            return InvokePost<TestRailMileStone>(command, data);
         }
         #endregion
 
@@ -118,7 +118,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.UPDATE_MILESTONE, milestoneId);
 
             // execute command
-            return ExecutePost<TestRailMileStone>(command, data);
+            return InvokePost<TestRailMileStone>(command, data);
         }
         #endregion
 
@@ -135,7 +135,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.DELETE_MILESTONE, milestoneId);
 
             // execute command
-            ExecutePost(command, data);
+            InvokePost(command, data);
         }
         #endregion
     }

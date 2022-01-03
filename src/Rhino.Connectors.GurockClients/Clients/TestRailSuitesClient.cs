@@ -101,13 +101,13 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.ADD_SUITE, projectId);
 
             // execute command
-            return ExecutePost<TestRailSuite>(command, data);
+            return InvokePost<TestRailSuite>(command, data);
         }
         #endregion
 
         #region *** pipeline: update ***
         /// <summary>
-        /// Updates an existing test suite (partial updates are supported, i.e. 
+        /// Updates an existing test suite (partial updates are supported, i.e.
         /// you can submit and update specific fields only).
         /// </summary>
         /// <param name="suiteId">The ID of the test suite</param>
@@ -119,7 +119,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.UPDATE_SUITE, suiteId);
 
             // execute command
-            return ExecutePost<TestRailSuite>(command, data);
+            return InvokePost<TestRailSuite>(command, data);
         }
         #endregion
 
@@ -134,7 +134,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.DELETE_SUITE, suiteId);
 
             // execute command
-            ExecutePost(command);
+            InvokePost(command);
         }
         #endregion
     }
