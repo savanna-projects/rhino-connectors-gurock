@@ -170,7 +170,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.ADD_PLAN_ENTRY, planId);
 
             // execute command
-            return ExecutePost<TestRailPlanEntry>(command, data);
+            return InvokePost<TestRailPlanEntry>(command, data);
         }
 
         private TestRailPlan Post(int projectId, TestRailPlan data)
@@ -179,7 +179,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.ADD_PLAN, projectId);
 
             // execute command
-            return ExecutePost<TestRailPlan>(command, data);
+            return InvokePost<TestRailPlan>(command, data);
         }
         #endregion
 
@@ -197,7 +197,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.UPDATE_PLAN, planId);
 
             // execute command
-            return ExecutePost<TestRailPlan>(command, data);
+            return InvokePost<TestRailPlan>(command, data);
         }
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.UPDATE_PLAN_ENTRY, planId, entryId);
 
             // execute command
-            return ExecutePost<TestRailPlanEntry>(command, data);
+            return InvokePost<TestRailPlanEntry>(command, data);
         }
         #endregion
 
@@ -231,7 +231,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.CLOSE_PLAN, planId);
 
             // execute command
-            return ExecutePost<TestRailPlan>(command);
+            return InvokePost<TestRailPlan>(command);
         }
         #endregion
 
@@ -246,7 +246,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.DELETE_PLAN, planId);
 
             // execute command
-            ExecutePost(command);
+            InvokePost(command);
         }
 
         /// <summary>
@@ -260,7 +260,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.DELETE_PLAN_ENTRY, planId, entryId);
 
             // execute command
-            ExecutePost(command);
+            InvokePost(command);
         }
         #endregion
     }

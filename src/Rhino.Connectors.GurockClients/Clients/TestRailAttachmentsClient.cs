@@ -95,7 +95,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.ADD_ATTACHMENT_TO_RESULT, resultId);
 
             // execute command
-            return ExecutePost<TestRailAttachment>(command, fileToUpload);
+            return InvokePost<TestRailAttachment>(command, fileToUpload);
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.ADD_ATTACHMENT_TO_RESULT_FOR_CASE, resultId, CaseId);
 
             // execute command
-            return ExecutePost<TestRailAttachment>(command, fileToUpload);
+            return InvokePost<TestRailAttachment>(command, fileToUpload);
         }
         #endregion
 
@@ -126,7 +126,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.DELETE_ATTACHMENT, attachmentId);
 
             // execute command
-            ExecutePost(command);
+            InvokePost(command);
         }
         #endregion
     }

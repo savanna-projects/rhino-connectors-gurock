@@ -4,6 +4,7 @@
  * RESOURCES
  * http://docs.gurock.com/testrail-api2/start
  */
+using Gravity.Abstraction.Logging;
 using Rhino.Connectors.GurockClients.Contracts;
 using Rhino.Connectors.GurockClients.Extensions;
 using Rhino.Connectors.GurockClients.Internal;
@@ -11,13 +12,13 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
-using Gravity.Abstraction.Logging;
 
 namespace Rhino.Connectors.GurockClients.Clients
 {
@@ -86,7 +87,7 @@ namespace Rhino.Connectors.GurockClients.Clients
         /// <param name="command">The Uri the request is sent to</param>
         /// <param name="data">The HTTP request content sent to the server</param>
         /// <returns>Data Transfer Object(s) (DTO) of the requests type</returns>
-        internal T ExecutePost<T>(string command, object data) => Post<T>(command, data);
+        internal T InvokePost<T>(string command, object data) => InvokePost<T>(data, command);
 
         /// <summary>
         /// Send a POST request to the specified Uri
@@ -94,22 +95,22 @@ namespace Rhino.Connectors.GurockClients.Clients
         /// <typeparam name="T">Type of the expected result object</typeparam>
         /// <param name="command">The Uri the request is sent to</param>
         /// <returns>Data Transfer Object(s) (DTO) of the requests type</returns>
-        internal T ExecutePost<T>(string command) => Post<T>(command, default);
+        internal T InvokePost<T>(string command) => InvokePost<T>(data: default, command);
 
         /// <summary>
         /// Send a POST request to the specified Uri
         /// </summary>
         /// <param name="command">The Uri the request is sent to</param>
         /// <param name="data">The HTTP request content sent to the server</param>
-        internal void ExecutePost(string command, object data) => Post(command, data);
+        internal void InvokePost(string command, object data) => InvokePost(data, command);
 
         /// <summary>
         /// Send a POST request to the specified Uri
         /// </summary>
         /// <param name="command">The Uri the request is sent to</param>
-        internal void ExecutePost(string command) => Post(command, default);
+        internal void InvokePost(string command) => InvokePost(data: default, command);
 
-        private T Post<T>(string command, object data)
+        private T InvokePost<T>(object data, string command)
         {
             // create command
             var httpCommand = new TestRailHttpCommand
@@ -127,7 +128,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             return entities;
         }
 
-        private void Post(string command, object data)
+        private void InvokePost(object data, string command)
         {
             // create command
             var httpCommand = new TestRailHttpCommand
@@ -211,6 +212,7 @@ namespace Rhino.Connectors.GurockClients.Clients
         }
 
         // gets web-response object
+        [SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields", Justification = "As design")]
         private WebResponse GetWebResponse(TestRailHttpCommand command)
         {
             // constants
@@ -250,6 +252,8 @@ namespace Rhino.Connectors.GurockClients.Clients
         }
 
         // creates a POST web-request
+        [SuppressMessage("Major Code Smell", "S1144:Unused private types or members should be removed", Justification = "Used by reflection.")]
+        [SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "False positive")]
         private WebRequest Post(TestRailHttpCommand command)
         {
             // initialize request
@@ -262,7 +266,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             }
 
             // set request-body
-            if(command.Data != default)
+            if (command.Data != default)
             {
                 var jsonBody = JsonConvert.SerializeObject(command.Data, Formatting.None, JsonSettings);
                 var requestBody = Encoding.UTF8.GetBytes(jsonBody);
@@ -274,6 +278,8 @@ namespace Rhino.Connectors.GurockClients.Clients
         }
 
         // creates a GET web-request
+        [SuppressMessage("Major Code Smell", "S1144:Unused private types or members should be removed", Justification = "Used by reflection.")]
+        [SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "False positive")]
         private static WebRequest Get(TestRailHttpCommand command) => ByCommand(command);
 
         // creates web-request by HTTP command
@@ -303,25 +309,21 @@ namespace Rhino.Connectors.GurockClients.Clients
                                 Path.GetExtension(filePath));
                 postDataWriter.Flush();
 
-                using (FileStream fileStream = new(filePath, FileMode.Open, FileAccess.Read))
+                using FileStream fileStream = new(filePath, FileMode.Open, FileAccess.Read);
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = fileStream.Read(buffer, 0, buffer.Length)) != 0)
                 {
-                    byte[] buffer = new byte[1024];
-                    int bytesRead;
-                    while ((bytesRead = fileStream.Read(buffer, 0, buffer.Length)) != 0)
-                    {
-                        postDataStream.Write(buffer, 0, bytesRead);
-                    }
-
-                    postDataWriter.Write("\r\n--" + boundary + "--\r\n");
-                    postDataWriter.Flush();
-
-                    request.ContentLength = postDataStream.Length;
-
-                    using (Stream requestStream = request.GetRequestStream())
-                    {
-                        postDataStream.WriteTo(requestStream);
-                    }
+                    postDataStream.Write(buffer, 0, bytesRead);
                 }
+
+                postDataWriter.Write("\r\n--" + boundary + "--\r\n");
+                postDataWriter.Flush();
+
+                request.ContentLength = postDataStream.Length;
+
+                using Stream requestStream = request.GetRequestStream();
+                postDataStream.WriteTo(requestStream);
             }
             return request;
         }

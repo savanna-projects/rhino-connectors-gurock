@@ -89,12 +89,12 @@ namespace Rhino.Connectors.GurockClients.Clients
         /// <param name="data">Request DTO</param>
         /// <returns>Success, the project was created and is returned as part of the response</returns>
         public TestRailProject AddProject(TestRailProject data)
-            => ExecutePost<TestRailProject>(ApiCommands.ADD_PROJECT, data);
+            => InvokePost<TestRailProject>(ApiCommands.ADD_PROJECT, data);
         #endregion
 
         #region *** pipeline: update ***
         /// <summary>
-        /// Updates an existing project (administrator status required; partial updates are supported, i.e. 
+        /// Updates an existing project (administrator status required; partial updates are supported, i.e.
         /// you can submit and update specific fields only).
         /// </summary>
         /// <param name="projectId">The ID of the project</param>
@@ -106,7 +106,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.UPDATE_PROJECT, projectId);
 
             // execute command
-            return ExecutePost<TestRailProject>(command, data);
+            return InvokePost<TestRailProject>(command, data);
         }
         #endregion
 
@@ -121,7 +121,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.DELETE_PROJECT, projectId);
 
             // execute command
-            ExecutePost(command);
+            InvokePost(command);
         }
         #endregion
     }

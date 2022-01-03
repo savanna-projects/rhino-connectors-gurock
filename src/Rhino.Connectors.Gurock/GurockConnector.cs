@@ -149,12 +149,16 @@ namespace Rhino.Connectors.Gurock
             foreach (var step in testCase.Steps)
             {
                 // extract exception if possible
-                var excption = step?.Exception?.InnerException != null ? step.Exception.InnerException : step.Exception;
+                var excption = step?.Exception?.InnerException != null ? step.Exception.InnerException : step?.Exception;
+                if(excption != null)
+                {
+                    continue;
+                }
 
                 // build custom-step
-                var customStep = new CustomStep { Content = step.Action, Expected = step.Expected };
-                customStep.StatusId = step.Actual ? 1 : 5;
-                customStep.Actual = string.IsNullOrEmpty($"{excption}") ? step.ReasonPhrase : $"{excption}";
+                var customStep = new CustomStep { Content = step?.Action, Expected = step?.Expected };
+                customStep.StatusId = step?.Actual == true ? 1 : 5;
+                customStep.Actual = string.IsNullOrEmpty($"{excption}") ? step?.ReasonPhrase : $"{excption}";
                 customSteps.Add(customStep);
             }
 

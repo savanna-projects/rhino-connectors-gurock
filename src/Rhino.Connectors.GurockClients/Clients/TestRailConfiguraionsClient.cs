@@ -41,7 +41,7 @@ namespace Rhino.Connectors.GurockClients.Clients
 
         #region *** pipeline: get    ***
         /// <summary>
-        /// Returns a list of available configurations, grouped by configuration 
+        /// Returns a list of available configurations, grouped by configuration
         /// groups (requires TestRail 3.1 or later).
         /// </summary>
         /// <param name="projectId">The ID of the project</param>
@@ -49,7 +49,7 @@ namespace Rhino.Connectors.GurockClients.Clients
         public IEnumerable<TestRailConfiguration> GetConfigs(int projectId) => Get(projectId);
 
         /// <summary>
-        /// Returns a list of available configurations, grouped by configuration 
+        /// Returns a list of available configurations, grouped by configuration
         /// groups (requires TestRail 3.1 or later).
         /// </summary>
         /// <param name="project">The name of the project</param>
@@ -90,7 +90,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.ADD_CONFIG_GROUP, projectId);
 
             // execute command
-            return ExecutePost<TestRailConfigurationGroup>(command, data);
+            return InvokePost<TestRailConfigurationGroup>(command, data);
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.ADD_CONFIG, configGroupId);
 
             // execute command
-            return ExecutePost<TestRailConfiguration>(command, data);
+            return InvokePost<TestRailConfiguration>(command, data);
         }
         #endregion
 
@@ -145,7 +145,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.UPDATE_CONFIG_GROUP, configGroupId);
 
             // execute command
-            return ExecutePost<TestRailConfigurationGroup>(command, data);
+            return InvokePost<TestRailConfigurationGroup>(command, data);
         }
 
         /// <summary>
@@ -160,7 +160,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.UPDATE_CONFIG, configId);
 
             // execute command
-            return ExecutePost<TestRailConfiguration>(command, data);
+            return InvokePost<TestRailConfiguration>(command, data);
         }
         #endregion
 
@@ -175,7 +175,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.DELETE_CONFIG_GROUP, configGroupId);
 
             // execute command
-            ExecutePost(command);
+            InvokePost(command);
         }
 
         /// <summary>
@@ -188,7 +188,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.DELETE_CONFIG, configId);
 
             // execute command
-            ExecutePost(command);
+            InvokePost(command);
         }
         #endregion
     }

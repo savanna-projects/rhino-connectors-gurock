@@ -146,7 +146,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.ADD_RESULT, testId);
 
             // execute command
-            return ExecutePost<TestRailResult>(command, data);
+            return InvokePost<TestRailResult>(command, data);
         }
 
         /// <summary>
@@ -163,7 +163,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.ADD_RESULT_FOR_CASE, runId, caseId);
 
             // execute command
-            return ExecutePost<TestRailResult>(command, data);
+            return InvokePost<TestRailResult>(command, data);
         }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.ADD_RESULTS, runId);
 
             // execute command
-            return ExecutePost<TestRailResult[]>(command, data);
+            return InvokePost<TestRailResult[]>(command, data);
         }
 
         /// <summary>
@@ -196,7 +196,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.ADD_RESULTS_FOR_CASES, runId);
 
             // execute command
-            return ExecutePost<TestRailResult[]>(command, data);
+            return InvokePost<TestRailResult[]>(command, data);
         }
         #endregion
     }

@@ -58,14 +58,6 @@ namespace Rhino.Connectors.GurockClients.Clients
         /// Returns a list of test runs for a project.
         /// Only returns those test runs that are not part of a test plan (please see get_plans/get_plan for this).
         /// </summary>
-        /// <param name="projectId">The ID of the project</param>
-        /// <returns>Success, the test runs are returned as part of the response</returns>
-        public IEnumerable<TestRailRun> GetRuns(int projectId) => Get(projectId);
-
-        /// <summary>
-        /// Returns a list of test runs for a project.
-        /// Only returns those test runs that are not part of a test plan (please see get_plans/get_plan for this).
-        /// </summary>
         /// <param name="project">The name of the project</param>
         /// <returns>Success, the test runs are returned as part of the response</returns>
         public IEnumerable<TestRailRun> GetPlans(string project)
@@ -80,6 +72,14 @@ namespace Rhino.Connectors.GurockClients.Clients
             // return entity
             return Get(testRailProject.Id);
         }
+
+        /// <summary>
+        /// Returns a list of test runs for a project.
+        /// Only returns those test runs that are not part of a test plan (please see get_plans/get_plan for this).
+        /// </summary>
+        /// <param name="projectId">The ID of the project</param>
+        /// <returns>Success, the test runs are returned as part of the response</returns>
+        public IEnumerable<TestRailRun> GetRuns(int projectId) => Get(projectId);
 
         /// <summary>
         /// Returns a list of test runs for a project.
@@ -137,13 +137,13 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.ADD_RUN, projectId);
 
             // execute command
-            return ExecutePost<TestRailRun>(command, data);
+            return InvokePost<TestRailRun>(command, data);
         }
         #endregion
 
         #region *** pipeline: update ***
         /// <summary>
-        /// Updates an existing test run (partial updates are supported, i.e. 
+        /// Updates an existing test run (partial updates are supported, i.e.
         /// you can submit and update specific fields only).
         /// </summary>
         /// <param name="runId">The ID of the test run</param>
@@ -155,7 +155,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.UPDATE_RUN, runId);
 
             // execute command
-            return ExecutePost<TestRailRun>(command, data);
+            return InvokePost<TestRailRun>(command, data);
         }
         #endregion
 
@@ -171,7 +171,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.CLOSE_RUN, runId);
 
             // execute command
-            return ExecutePost<TestRailRun>(command);
+            return InvokePost<TestRailRun>(command);
         }
         #endregion
 
@@ -186,7 +186,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.DELETE_RUN, runId);
 
             // execute command
-            ExecutePost(command);
+            InvokePost(command);
         }
         #endregion
     }

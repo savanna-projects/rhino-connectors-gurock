@@ -108,13 +108,13 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.ADD_CASE, sectionId);
 
             // execute command
-            return ExecutePost<TestRailCase>(command, data);
+            return InvokePost<TestRailCase>(command, data);
         }
         #endregion
 
         #region *** pipeline: update ***
         /// <summary>
-        /// Updates an existing test case (partial updates are supported, 
+        /// Updates an existing test case (partial updates are supported,
         /// i.e. you can submit and update specific fields only).
         /// </summary>
         /// <param name="caseId">The ID of the test case</param>
@@ -126,7 +126,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.UPDATE_CASE, caseId);
 
             // execute command
-            return ExecutePost<TestRailCase>(command, data);
+            return InvokePost<TestRailCase>(command, data);
         }
         #endregion
 
@@ -141,7 +141,7 @@ namespace Rhino.Connectors.GurockClients.Clients
             var command = string.Format(ApiCommands.DELETE_CASE, caseId);
 
             // execute command
-            ExecutePost(command);
+            InvokePost(command);
         }
         #endregion
     }
