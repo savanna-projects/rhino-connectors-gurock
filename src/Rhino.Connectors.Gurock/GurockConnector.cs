@@ -149,7 +149,7 @@ namespace Rhino.Connectors.Gurock
             foreach (var step in testCase.Steps)
             {
                 // extract exception if possible
-                var excption = step?.Exception?.InnerException != null ? step.Exception.InnerException : step?.Exception;
+                var excption = step?.Exception?.Exception?.GetBaseException();
                 if(excption != null)
                 {
                     continue;
