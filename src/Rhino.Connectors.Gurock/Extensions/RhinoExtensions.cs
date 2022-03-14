@@ -55,7 +55,10 @@ namespace Rhino.Connectors.Gurock.Extensions
             return testCase.CustomStepsSeparated.Select(i => new RhinoTestStep
             {
                 Action = i.Content,
-                Expected = i.Expected
+                ExpectedResults = i.Expected.SplitByLines().Where(i => !string.IsNullOrEmpty(i.Trim())).Select(i => new RhinoExpectedResult
+                {
+                    ExpectedResult = i
+                })
             });
         }
 
@@ -75,7 +78,11 @@ namespace Rhino.Connectors.Gurock.Extensions
             {
                 SectionId = sectionId,
                 Title = testCase.Scenario,
-                CustomStepsSeparated = testCase.Steps.Select(i => new CustomStep { Content = i.Action, Expected = i.Expected }).ToArray()
+                CustomStepsSeparated = testCase.Steps.Select(i => new CustomStep
+                { 
+                    Content = i.Action,
+                    Expected = string.Join("\n", i.ExpectedResults.Select(i=>i.ExpectedResult))
+                }).ToArray()
             };
         }
 
