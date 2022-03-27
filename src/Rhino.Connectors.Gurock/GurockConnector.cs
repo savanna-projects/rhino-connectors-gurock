@@ -113,7 +113,7 @@ namespace Rhino.Connectors.Gurock
         /// </summary>
         /// <param name="testCase">The Rhino.Api.Contracts.AutomationProvider.RhinoTestCase which was executed.</param>
         /// <remarks>Use this method for PostTestExecute customization.</remarks>
-        public override RhinoTestCase OnTestTeardown(RhinoTestCase testCase)
+        protected override RhinoTestCase OnTestTeardown(RhinoTestCase testCase)
         {
             // exit conditions
             if (Configuration.ConnectorConfiguration.DryRun)

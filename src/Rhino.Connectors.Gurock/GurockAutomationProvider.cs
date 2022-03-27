@@ -134,7 +134,7 @@ namespace Rhino.Connectors.Gurock
         /// </summary>
         /// <param name="ids">A list of test ids to get test cases by.</param>
         /// <returns>A collection of Rhino.Api.Contracts.AutomationProvider.RhinoTestCase</returns>
-        public override IEnumerable<RhinoTestCase> OnGetTestCases(params string[] ids)
+        protected override IEnumerable<RhinoTestCase> OnGetTestCases(params string[] ids)
         {
             // constants: logging
             const string M1 = "tests-repository parsed into integers";
@@ -201,7 +201,7 @@ namespace Rhino.Connectors.Gurock
         /// </summary>
         /// <param name="testCase">Rhino.Api.Contracts.AutomationProvider.RhinoTestCase by which to create automation provider test case.</param>
         /// <returns>The ID of the newly created entity.</returns>
-        public override string OnCreateTestCase(RhinoTestCase testCase)
+        protected override string OnCreateTestCase(RhinoTestCase testCase)
         {
             // shortcuts
             var onProject = Configuration.ConnectorConfiguration.Project;
@@ -244,7 +244,7 @@ namespace Rhino.Connectors.Gurock
         /// Implements a mechanism of setting a testing configuration for an automation provider.
         /// </summary>
         /// <remarks>Use this method for <see cref="SetConfiguration"/> customization.</remarks>
-        public override void OnSetConfiguration(RhinoConfiguration configuration)
+        protected override void OnSetConfiguration(RhinoConfiguration configuration)
         {
             // constants: logging
             const string M0 = "searching for [{0}] configuration-group under [{1}] project";
@@ -287,7 +287,7 @@ namespace Rhino.Connectors.Gurock
         /// </summary>
         /// <param name="testRun">Rhino.Api.Contracts.AutomationProvider.RhinoTestRun object to modify before creating.</param>
         /// <returns>Rhino.Api.Contracts.AutomationProvider.RhinoTestRun based on provided test cases.</returns>
-        public override RhinoTestRun OnCreateTestRun(RhinoTestRun testRun)
+        protected override RhinoTestRun OnCreateTestRun(RhinoTestRun testRun)
         {
             // constants: logging
             const string M1 = "test-run [{0}] create under [{1}] project";
@@ -419,7 +419,7 @@ namespace Rhino.Connectors.Gurock
         /// Completes automation provider test run results, if any were missed or bypassed.
         /// </summary>
         /// <param name="testRun">Rhino.Api.Contracts.AutomationProvider.RhinoTestRun results object to complete by.</param>
-        public override void OnRunTeardown(RhinoTestRun testRun)
+        protected override void OnRunTeardown(RhinoTestRun testRun)
         {
             // get test plan
             var isPlan = testRun.Context.ContainsKey(nameof(TestRailPlan));
@@ -443,7 +443,7 @@ namespace Rhino.Connectors.Gurock
         /// </summary>
         /// <param name="testCase">RhinoTestCase by which to find bugs.</param>
         /// <returns>A list of bugs (can be JSON or ID for instance).</returns>
-        public override IEnumerable<string> OnGetBugs(RhinoTestCase testCase)
+        protected override IEnumerable<string> OnGetBugs(RhinoTestCase testCase)
         {
             return bugsManager.GetBugs(testCase);
         }
@@ -453,7 +453,7 @@ namespace Rhino.Connectors.Gurock
         /// </summary>
         /// <param name="testCase">RhinoTestCase by which to assert against match bugs.</param>
         /// <returns>An open bug.</returns>
-        public override string OnGetOpenBug(RhinoTestCase testCase)
+        protected override string OnGetOpenBug(RhinoTestCase testCase)
         {
             // setup
             _ = int.TryParse(testCase.Key, out int caseId);
@@ -482,16 +482,16 @@ namespace Rhino.Connectors.Gurock
         /// </summary>
         /// <param name="testCase">Rhino.Api.Contracts.AutomationProvider.RhinoTestCase by which to create automation provider bug.</param>
         /// <returns>The ID of the newly created entity.</returns>
-        public override string OnCreateBug(RhinoTestCase testCase)
+        protected override string OnCreateBug(RhinoTestCase testCase)
         {
             return bugsManager.OnCreateBug(testCase);
         }
 
         /// <summary>
-        /// Executes a routie of post bug creation.
+        /// Executes a routine of post bug creation.
         /// </summary>
         /// <param name="testCase">RhinoTestCase to execute routine on.</param>
-        public override void OnCreateBugTeardown(RhinoTestCase testCase)
+        protected override void OnCreateBugTeardown(RhinoTestCase testCase)
         {
             // exit conditions
             if (!testCase.Context.ContainsKey("lastBugKey"))
@@ -526,7 +526,7 @@ namespace Rhino.Connectors.Gurock
         /// Updates an existing bug (partial updates are supported, i.e. you can submit and update specific fields only).
         /// </summary>
         /// <param name="testCase">Rhino.Api.Contracts.AutomationProvider.RhinoTestCase by which to update automation provider bug.</param>
-        public override string OnUpdateBug(RhinoTestCase testCase)
+        protected override string OnUpdateBug(RhinoTestCase testCase)
         {
             // setup
             var closeStatus = Regex.IsMatch(Configuration.ConnectorConfiguration.Collection, @"(?i)atlassian\.net")
@@ -542,7 +542,7 @@ namespace Rhino.Connectors.Gurock
         /// Close all existing bugs.
         /// </summary>
         /// <param name="testCase">Rhino.Api.Contracts.AutomationProvider.RhinoTestCase by which to close automation provider bugs.</param>
-        public override IEnumerable<string> OnCloseBugs(RhinoTestCase testCase)
+        protected override IEnumerable<string> OnCloseBugs(RhinoTestCase testCase)
         {
             // setup
             _ = int.TryParse(testCase.Key, out int id);
@@ -563,7 +563,7 @@ namespace Rhino.Connectors.Gurock
         /// Close all existing bugs.
         /// </summary>
         /// <param name="testCase">Rhino.Api.Contracts.AutomationProvider.RhinoTestCase by which to close automation provider bugs.</param>
-        public override string OnCloseBug(RhinoTestCase testCase)
+        protected override string OnCloseBug(RhinoTestCase testCase)
         {
             return bugsManager.OnCloseBug(testCase, "Done", string.Empty);
         }
