@@ -99,7 +99,7 @@ namespace Rhino.Connectors.Gurock
             // integration
             clientFactory = new ClientFactory(
                 configuration.ConnectorConfiguration.Collection,
-                configuration.ConnectorConfiguration.UserName,
+                configuration.ConnectorConfiguration.Username,
                 configuration.ConnectorConfiguration.Password,
                 logger);
 
@@ -114,7 +114,7 @@ namespace Rhino.Connectors.Gurock
 
             // meta data
             project = suitesClient.Projects.FirstOrDefault(i => i.Name.Equals(configuration.ConnectorConfiguration.Project, Compare));
-            user = usersClient.GetUserByEmail(configuration.ConnectorConfiguration.UserName);
+            user = usersClient.GetUserByEmail(configuration.ConnectorConfiguration.Username);
         }
 
         private static JiraAuthentication GetJiraAuthentication(IDictionary<string, object> capabilities) => new()
