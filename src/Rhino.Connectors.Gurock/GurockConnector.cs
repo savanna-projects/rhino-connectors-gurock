@@ -90,7 +90,7 @@ namespace Rhino.Connectors.Gurock
             // integration
             var clientFactory = new ClientFactory(
                 testRailServer: configuration.ConnectorConfiguration.Collection,
-                user: configuration.ConnectorConfiguration.UserName,
+                user: configuration.ConnectorConfiguration.Username,
                 password: configuration.ConnectorConfiguration.Password,
                 logger);
 
@@ -156,9 +156,13 @@ namespace Rhino.Connectors.Gurock
 
                 // build custom-step
                 var expected = string.Join("\n", step?.ExpectedResults.Select(i => i.ExpectedResult));
-                var customStep = new CustomStep { Content = step?.Action, Expected = expected };
-                customStep.StatusId = step?.Actual == true ? 1 : 5;
-                customStep.Actual = step.ReasonPhrase;
+                var customStep = new CustomStep
+                {
+                    Content = step?.Action,
+                    Expected = expected,
+                    StatusId = step?.Actual == true ? 1 : 5,
+                    Actual = step.ReasonPhrase
+                };
                 customSteps.Add(customStep);
             }
 
