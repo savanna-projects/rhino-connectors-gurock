@@ -124,7 +124,7 @@ namespace Rhino.Connectors.Gurock
             Collection = capabilities.GetCapability(RhinoConnectors.TestRail, "jiraCollection", string.Empty),
             Password = capabilities.GetCapability(RhinoConnectors.TestRail, "jiraPassword", string.Empty),
             Project = capabilities.GetCapability(RhinoConnectors.TestRail, "jiraProject", string.Empty),
-            UserName = capabilities.GetCapability(RhinoConnectors.TestRail, "jiraUserName", string.Empty)
+            Username = capabilities.GetCapability(RhinoConnectors.TestRail, "jiraUsername", string.Empty)
         };
         #endregion
 
