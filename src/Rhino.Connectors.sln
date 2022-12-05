@@ -3,20 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{994030E3-29A9-4AC6-B32F-AEAFD3245C9B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{994030E3-29A9-4AC6-B32F-AEAFD3245C9B}"
 	ProjectSection(SolutionItems) = preProject
 		..\build\AzurePipeline.yaml = ..\build\AzurePipeline.yaml
 		..\build\AzurePipelineProduction.yaml = ..\build\AzurePipelineProduction.yaml
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{A9C532ED-8590-47F2-8F74-29CA541F5BBA}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".documents", ".documents", "{A9C532ED-8590-47F2-8F74-29CA541F5BBA}"
 	ProjectSection(SolutionItems) = preProject
 		..\docs\basics\ConnectorCapabilities.md = ..\docs\basics\ConnectorCapabilities.md
 		..\README.md = ..\README.md
 		..\docs\basics\TestRailConfiguration.md = ..\docs\basics\TestRailConfiguration.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{34C08C29-83DD-4544-8EDD-7E4F7091AA62}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".test", ".test", "{34C08C29-83DD-4544-8EDD-7E4F7091AA62}"
 	ProjectSection(SolutionItems) = preProject
 		..\test\SettingsMsTest.runsettings = ..\test\SettingsMsTest.runsettings
 	EndProjectSection
@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rhino.Connectors.Gurock.Uni
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rhino.Connectors.GurockClients", "Rhino.Connectors.GurockClients\Rhino.Connectors.GurockClients.csproj", "{632596CA-AE72-4EF7-9175-A64E30759921}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Git", "Git", "{E6E13402-F054-419A-B6CA-5FC222127415}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".git", ".git", "{E6E13402-F054-419A-B6CA-5FC222127415}"
 	ProjectSection(SolutionItems) = preProject
 		..\.gitignore = ..\.gitignore
 		..\LICENSE = ..\LICENSE
